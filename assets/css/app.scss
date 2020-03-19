@@ -1,0 +1,32 @@
+$primary: #5651ff;
+
+@import "~bulma";
+
+body {
+    background-color: lightgray;
+}
+
+
+.no-result {
+    color : red;
+    font-weight: bold;
+}
+
+.result-title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.institution {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+
+    .name {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+}
+

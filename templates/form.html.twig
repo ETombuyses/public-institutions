@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<h1 class="title">Recherche d'établissements publics par commune</h1>
+<section class="section has-background-white-ter">
+    <p>Renseignez un nom ET/OU le code postal d'une commune afin de récupérer la liste des établissements situées dans la/les commune(s) recherchée(s).</p>
+    {{ form_start(search_form) }}
+        {{ form_row(search_form.commune) }}
+        {{ form_errors(search_form.commune) }}
+
+
+        {{ form_row(search_form.postal_code) }}
+        {{ form_row(search_form.institution) }}
+
+    <button class="button is-primary is-fullwidth" type="submit">Rechercher</button>
+    {{ form_end(search_form) }}
+    {% if emptyForm == true and formSent == true %}
+        <p class="help is-danger">
+            <span class="tag is-danger">ERREUR : </span>
+            Veuillez remplir au moins un champ du formulaire.
+        </p>
+    {% endif %}
+</section>
+
+
+    {% if institutions | length > 0 %}
+    <section>
+        <h2 class="result-title">Résultats : </h2>
+        {% for institution in institutions %}
+            <div class="institution">
+           {% if institution.features[0].properties.nom is defined %} <h3 class="name">{{ institution.features[0].properties.nom }}</h3> {% endif %}
+            {% if institution.features[0].properties.pivotLocal is defined %}<p> Type d'établissement: {{ institution.features[0].properties.pivotLocal }}</p>{% endif %}
+
+            {# foreach ligne #}
+            {% if institution.features[0].properties.adresses[0] is defined %}<p> Adresse: {{ institution.features[0].properties.adresses[0].lignes[0] }} {{ institution.features[0].properties.adresses[0].codePostal }} {{ institution.features[0].properties.adresses[0].commune }}</p>{% endif %}
+
+            {% if institution.features[0].properties.horaires is defined %}
+                <p>Horaires :</p>
+                {% for horaire in institution.features[0].properties.horaires %}
+                    <p>du {{ horaire.du }} au {{ horaire.au }} :</p>
+
+                    {% for heure in horaire.heures %}
+                        <p>{{ heure.de }} à {{ heure.a }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            {% if institution.features[0].properties.telephone is defined %} <p> Téléphone : {{ institution.features[0].properties.telephone }}</p>{% endif %}
+            {% if institution.features[0].properties.url is defined %}<p>Site web : {{ institution.features[0].properties.url }}</p>{% endif %}
+            </div>
+        {% endfor %}
+    </section>
+    {% elseif emptyForm == false and formSent == true %}
+        <p class="no-result">Aucun résultat n'a été trouvé pour cette recherche</p>
+    {% endif %}
+{% endblock %}
+
